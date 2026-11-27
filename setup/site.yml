@@ -1,0 +1,87 @@
+name: Build, Release & Deploy
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Unpack uploaded project zip
+        if: hashFiles('terraverse-upload.zip') != ''
+        run: |
+          unzip -oq terraverse-upload.zip
+          git rm -q terraverse-upload.zip
+          git config user.name "Sanket Santosh Vidya Manohar"
+          git config user.email "${{ github.repository_owner_id }}+${{ github.repository_owner }}@users.noreply.github.com"
+          git add -A
+          git commit -qm "Release v$(cat VERSION)"
+          git tag -fa "v$(cat VERSION)" -m "TerraVerse v$(cat VERSION)"
+          git push -q origin HEAD:main
+          git push -qf origin "v$(cat VERSION)"
+
+      - id: check
+        run: echo "ready=$([ -f data/terraverse.db.enc ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f VERSION ] || exit 0
+          V="v$(cat VERSION)"
+          gh release view "$V" >/dev/null 2>&1 && { echo "Release $V already exists"; exit 0; }
+          git ls-remote --exit-code --tags origin "$V" >/dev/null || exit 0
+          awk -v v="$(cat VERSION)" '$0 ~ "^## \\[" v "\\]" {on=1; next} on && /^## \[/ {exit} on {print}' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "TerraVerse $V" > notes.md
+          mkdir -p dist/terraverse
+          cp -r index.html .nojekyll css js data assets README.md LICENSE CHANGELOG.md dist/terraverse/
+          rm -f dist/terraverse/js/keyring*.js
+          (cd dist && zip -qr "terraverse-$V.zip" terraverse)
+          gh release create "$V" "dist/terraverse-$V.zip" --title "TerraVerse $V" --notes-file notes.md
+
+  deploy:
+    needs: prepare
+    if: github.ref == 'refs/heads/main' && needs.prepare.outputs.ready == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Build keyring from secret (the key never enters the repo)
+        env:
+          TV_DB_KEY: ${{ secrets.TV_DB_KEY }}
+          TV_ALLOWED_HOSTS: ${{ vars.TV_ALLOWED_HOSTS }}
+        run: python3 tools/make_keyring.py
+
+      - name: Assemble site
+        run: |
+          mkdir _site
+          cp -r index.html .nojekyll css js data assets _site/
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

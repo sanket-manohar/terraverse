@@ -1,0 +1,12 @@
+# ── NEVER COMMIT THESE ──
+# the secret encryption key
+.secrets/
+# the plain-text source data (only the encrypted data/terraverse.db.enc is public)
+content/
+# generated keyrings (created at deploy time / locally)
+js/keyring.js
+js/keyring.local.js
+
+.DS_Store
+__pycache__/
+node_modules/

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TerraVerse — The Living Encyclopedia of Everything</title>
+  <meta name="description" content="An animated encyclopedia of every animal, bird, fish, insect, plant, tree, medicinal herb, microbe, mountain, star, galaxy, moon, language and extinct species humanity has documented.">
+  <meta name="author" content="Sanket Santosh Vidya Manohar">
+  <meta name="theme-color" content="#07170f">
+  <meta property="og:title" content="TerraVerse — The Living Encyclopedia of Everything">
+  <meta property="og:description" content="From the first cell to the farthest galaxy, explore everything we know.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://en.wikipedia.org">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,700;9..144,900&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+Egyptian+Hieroglyphs&family=Noto+Sans+Cuneiform&family=Noto+Sans+Phoenician&family=Noto+Sans+Runic&family=Noto+Sans+Tamil:wght@500&family=Noto+Sans+Devanagari:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-theme="earth">
+  <div id="loader">
+    <div class="seed"><svg viewBox="0 0 120 120"><path class="stem" d="M60 110 C60 80 58 60 60 40"/><path class="lf l1" d="M60 70 C40 60 30 45 34 34 C48 38 58 52 60 70Z"/><path class="lf l2" d="M60 56 C78 46 90 32 86 22 C72 26 62 40 60 56Z"/><circle class="bud" cx="60" cy="38" r="7"/></svg></div>
+    <p>Unsealing the archive…</p>
+  </div>
+
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div id="progress"></div>
+  <div id="cursor" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="logo" href="#/" aria-label="TerraVerse home">
+      <svg viewBox="0 0 40 40" class="logo-mark"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="2" opacity=".5"/><path d="M20 6c8 6 8 22 0 28c-8-6-8-22 0-28z" fill="currentColor" opacity=".9"/><path d="M5 18c10 3 20 3 30 0" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+      <span>Terra<b>Verse</b></span>
+    </a>
+    <nav class="nav-links">
+      <div class="dd"><button class="dd-btn">Realms ▾</button><div class="dd-menu" id="menu-realms"></div></div>
+      <a href="#/realm/extinct">Extinct</a><a href="#/realm/languages">Languages</a><a href="#/realm/stars">Cosmos</a><a href="#/about">About</a>
+    </nav>
+    <button class="search-btn" data-open-search aria-label="Search">🔍 <span>Search everything</span><kbd>/</kbd></button>
+    <button id="burger" aria-label="Menu"><i></i><i></i></button>
+  </header>
+
+  <main id="app"></main>
+
+  <div id="search" class="search hidden" role="dialog" aria-label="Search">
+    <div class="search-panel">
+      <label class="field big"><span>🔍</span><input id="sq" placeholder="Search animals, stars, languages, anything…" autocomplete="off"><button data-close-search aria-label="Close">esc</button></label>
+      <div class="search-cols">
+        <div><h5>In TerraVerse</h5><div id="sl"><p class="muted">Try "elephant", "tamil", "black hole", "neem"…</p></div></div>
+        <div><h5>From the world's knowledge</h5><div id="sw"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <div><b>TerraVerse</b><p>Everything we know, from the first cell to the farthest galaxy.</p><p class="small">Created by Sanket Santosh Vidya Manohar · v1.0.0</p></div>
+    <p class="small">Core entries are stored in an encrypted database. Live articles and images come from Wikipedia &amp; Wikimedia Commons (CC BY-SA). Conservation status follows the IUCN Red List.</p>
+  </footer>
+
+  <script src="js/keyring.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/wiki.js"></script>
+  <script src="js/fx.js"></script>
+  <script src="js/scenes.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
