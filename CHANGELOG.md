@@ -3,6 +3,14 @@
 All notable changes to TerraVerse are documented here.
 Versions follow [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH.
 
+## [1.0.1] — 2026-11-27
+
+### Changed
+- README now presents the product: realms, features, credits and licence.
+
+### Removed
+- Setup files that are no longer needed in the repository.
+
 ## [1.0.0] — 2026-11-27
 
 ### Added
